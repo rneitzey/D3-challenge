@@ -1,5 +1,5 @@
 //Create chart space
-var svgWidth = 960;
+var svgWidth = 800;
 var svgHeight = 600;
 
 var margin = {
@@ -33,11 +33,11 @@ d3.csv("census.csv").then(function(census) {
 
     //Scale functions
     var xLinearScale = d3.scaleLinear()
-        .domain([d3.min(census, d => d.poverty)-1,d3.max(census, d => d.poverty)])
+        .domain([d3.min(census, d => d.poverty)-0.5,d3.max(census, d => d.poverty)])
         .range([0, width]);
 
     var yLinearScale = d3.scaleLinear()
-        .domain([0, d3.max(census, d => d.healthcare)])
+        .domain([d3.min(census, d => d.healthcare)-1, d3.max(census, d => d.healthcare)])
         .range([height, 0]);
 
     //Axis functions
@@ -53,15 +53,27 @@ d3.csv("census.csv").then(function(census) {
         .call(leftAxis);
 
     //Create bubbles for chart
-    chartGroup.selectAll("circle")
-    .data(census)
-    .enter()
-    .append("circle")
-    .attr("cx", d => xLinearScale(d.poverty))
-    .attr("cy", d => yLinearScale(d.healthcare))
-    .attr("r", "10")
-    .attr("fill", "blue")
-    .attr("opacity", "0.3");
+    circleGroup = chartGroup.selectAll("circle")
+        .data(census).enter()
+    //Append circles
+    circleGroup
+        .append("circle")
+        .attr("cx", d => xLinearScale(d.poverty))
+        .attr("cy", d => yLinearScale(d.healthcare))
+        .attr("r", "10")
+        .attr("fill", "blue")
+        .attr("opacity", "0.7")
+        .attr("state", d => d.abbr);
+
+    //Add State text to circles
+    circleGroup
+        .append("text")
+        .attr("fill","white")
+        .attr("font-size","10")
+        .attr("text-anchor","middle")
+        .attr("x", d => xLinearScale(d.poverty))
+        .attr("y", d => yLinearScale(d.healthcare)+5)
+        .text(d => d.abbr);
 
     // Create axes labels
     chartGroup.append("text")
