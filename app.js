@@ -27,7 +27,7 @@ d3.csv("census.csv").then(function(census) {
     
     //Cast data as numbers
     census.forEach(function(data) {
-        data.poverty = +data.obesity;
+        data.obesity = +data.obesity;
         data.income = +data.income;
     });
 
@@ -89,4 +89,3 @@ d3.csv("census.csv").then(function(census) {
       .attr("class", "axisText")
       .text("Obesity %");
 });
-
